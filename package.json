@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "@openpgp/web-stream-tools": "^0.0.11-patch-0",
+    "openpgp": "^5.11.1"
+  }
+}

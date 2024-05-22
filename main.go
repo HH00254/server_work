@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+
 	srv := server.NewServer()
 	// go func() {
 	// 	err := srv.ListenAndServe()
