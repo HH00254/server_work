@@ -3,7 +3,7 @@ package server
 import (
 	"encoding/json"
 	"fmt"
-	"log"
+
 	"net/http"
 	"os"
 	"path/filepath"
@@ -23,7 +23,9 @@ func NewServer() *http.Server {
 
 	router.Get("/isAlive", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("here")
-		responWithJSON(w, 200, struct{}{})
+
+		RespondWithJSON(w, 200, struct{}{})
+
 	})
 
 	router.Get("/session", func(w http.ResponseWriter, r *http.Request) {
@@ -80,17 +82,4 @@ func NewServer() *http.Server {
 	}
 
 	return srv
-}
-
-func responWithJSON(w http.ResponseWriter, statusCode int, payload interface{}) {
-	byteData, err := json.Marshal(payload)
-	if err != nil {
-		log.Printf("Failed to marshal JSON response: %v", payload)
-		w.WriteHeader(500)
-
-	}
-
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(statusCode)
-	w.Write(byteData)
 }
