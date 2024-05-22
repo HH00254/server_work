@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -34,7 +35,6 @@ func PublicKeyDecryption(w http.ResponseWriter, r *http.Request) {
 	type parameters struct {
 		EncryptedKey string `json:"encryptedKey"`
 	}
-
 	param := &parameters{}
 	decoder := json.NewDecoder(r.Body)
 
@@ -48,9 +48,13 @@ func PublicKeyDecryption(w http.ResponseWriter, r *http.Request) {
 
 	decrypted, err := helper.DecryptMessageArmored(privateKey, nil, param.EncryptedKey)
 	if err != nil {
-		panic(err)
+		log.Println("Decryption Error: ", err)
 	}
+	fmt.Println(decrypted)
 
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode("TODO")
 }
 
 func RouteToClientPage(w http.ResponseWriter, r *http.Request) {
