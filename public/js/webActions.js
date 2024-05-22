@@ -49,7 +49,7 @@ async function getPublicKey() {
 
 function sendHTTPRequest() {
     const key = getCookieValue("uidPassword");
-    const url = "localhost:8080/internal/decryption";
+    const url = "/decryption";
     const data = {
         "encryptedKey": key
     };

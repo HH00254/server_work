@@ -19,8 +19,8 @@ func NewServer() *http.Server {
 	router.Get("/isAlive", handler.ReadyCheck)
 	router.Get("/session", sessions.MySessionHandler)
 	router.Get("/pgkey", handler.GetPublicKey)
+	router.Post("/decryption", handler.PublicKeyDecryption)
 	router.Get("/*", handler.RouteToClientPage)
-	router.Get("/decryption", handler.PublicKeyDecryption)
 
 	srv := &http.Server{
 		Handler: router,
