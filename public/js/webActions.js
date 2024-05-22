@@ -10,8 +10,6 @@ function load() {
             const [userName , userPassword] =  getFormData();
             const pubKey =  await getPublicKey();
             const encryptPubKey = await encryptClientPassword(userPassword, pubKey);
-
-            // localStorage.setItem("password" ,encryptPubKey)
             
             setCookie(userName, encryptPubKey, 1);
         }
@@ -19,12 +17,8 @@ function load() {
         event.preventDefault();
     });
 
-    postButton.addEventListener("click", () => {
-        let key = getCookieValue("uidPassword");
+    postButton.addEventListener("click", sendHTTPRequest);
 
-    });
-
-   
 }
 
 async function getPublicKey() {
@@ -51,6 +45,31 @@ async function getPublicKey() {
         print('Fetch Error: ' + `${error.name.message}`);
         
     }
+}
+
+function sendHTTPRequest() {
+    const key = getCookieValue("uidPassword");
+    const url = "localhost:8080/internal/decryption";
+    const data = {
+        "encryptedKey": key
+    };
+
+    fetch(
+        url, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(message => {
+            console.log("Success:", message);
+        })
+        .catch(error => {
+            console.log("Error:", error)
+        });
+
 }
 
 async function encryptClientPassword(password, publicKeyArmored) {

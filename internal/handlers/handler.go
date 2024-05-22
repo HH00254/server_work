@@ -8,10 +8,11 @@ import (
 	"path/filepath"
 
 	"github.com/HH00254/server_work/internal/jsonFormat"
+	"github.com/ProtonMail/gopenpgp/v2/helper"
 )
 
 func ReadyCheck(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("here")
+	fmt.Println("Server is Healthy")
 	jsonFormat.RespondWithJSON(w, 200, struct{}{})
 
 }
@@ -29,6 +30,29 @@ func GetPublicKey(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func PublicKeyDecryption(w http.ResponseWriter, r *http.Request) {
+	type parameters struct {
+		EncryptedKey string `json:"encryptedKey"`
+	}
+
+	param := &parameters{}
+	decoder := json.NewDecoder(r.Body)
+
+	err := decoder.Decode(param)
+	if err != nil {
+		// TODO
+		return
+	}
+
+	privateKey := os.Getenv("PRVKEY")
+
+	decrypted, err := helper.DecryptMessageArmored(privateKey, nil, param.EncryptedKey)
+	if err != nil {
+		panic(err)
+	}
+
+}
+
 func RouteToClientPage(w http.ResponseWriter, r *http.Request) {
 
 	var pathNotFound bool = true
@@ -37,6 +61,8 @@ func RouteToClientPage(w http.ResponseWriter, r *http.Request) {
 	var fs http.Handler = http.FileServer(filesDir)
 
 	requestPath := filepath.Join(publicDir, r.URL.Path)
+
+	fmt.Println(requestPath)
 
 	stat, err := os.Stat(requestPath)
 	if err == nil && stat.IsDir() {
