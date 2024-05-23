@@ -6,20 +6,9 @@ import (
 	handler "github.com/HH00254/server_work/internal/handlers"
 	"github.com/HH00254/server_work/internal/sessions"
 	"github.com/HH00254/server_work/util"
+
 	"github.com/go-chi/chi/v5"
 )
-
-type Controller struct {
-	publicKey string
-	decryptor util.PgpDecryptor
-}
-
-func NewController(publicKey string, decryptor util.PgpDecryptor) Controller {
-	return Controller{
-		publicKey: publicKey,
-		decryptor: decryptor,
-	}
-}
 
 func NewServer(port, publicKey, privateKey string) *http.Server {
 
@@ -29,7 +18,7 @@ func NewServer(port, publicKey, privateKey string) *http.Server {
 	// pattern dependency injection in main.go normally
 	router.Get("/isAlive", handler.ReadyCheck)
 	router.Get("/session", sessions.MySessionHandler)
-	router.Get("/pgkey", handler.GetPublicKey)
+	router.Get("/pgkey", controller.GetPublicKey)
 	router.Post("/decryption", controller.PublicKeyDecryption)
 	router.Get("/*", handler.RouteToClientPage)
 
