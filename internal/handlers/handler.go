@@ -3,13 +3,11 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 
 	"github.com/HH00254/server_work/internal/jsonFormat"
-	"github.com/ProtonMail/gopenpgp/v2/helper"
 )
 
 func ReadyCheck(w http.ResponseWriter, r *http.Request) {
@@ -31,31 +29,31 @@ func GetPublicKey(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func PublicKeyDecryption(w http.ResponseWriter, r *http.Request) {
-	type parameters struct {
-		EncryptedKey string `json:"encryptedKey"`
-	}
-	param := &parameters{}
-	decoder := json.NewDecoder(r.Body)
+// func PublicKeyDecryption(w http.ResponseWriter, r *http.Request) {
+// 	type parameters struct {
+// 		EncryptedKey string `json:"encryptedKey"`
+// 	}
+// 	param := &parameters{}
+// 	decoder := json.NewDecoder(r.Body)
 
-	err := decoder.Decode(param)
-	if err != nil {
-		// TODO
-		return
-	}
+// 	err := decoder.Decode(param)
+// 	if err != nil {
+// 		// TODO
+// 		return
+// 	}
 
-	privateKey := os.Getenv("PRVKEY")
+// 	privateKey := os.Getenv("PRVKEY")
 
-	decrypted, err := helper.DecryptMessageArmored(privateKey, nil, param.EncryptedKey)
-	if err != nil {
-		log.Println("Decryption Error: ", err)
-	}
-	fmt.Println(decrypted)
+// 	decrypted, err := helper.DecryptMessageArmored(privateKey, nil, param.EncryptedKey)
+// 	if err != nil {
+// 		log.Println("Decryption Error: ", err)
+// 	}
+// 	fmt.Println(decrypted)
 
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(200)
-	json.NewEncoder(w).Encode("TODO")
-}
+// 	w.Header().Add("Content-Type", "application/json")
+// 	w.WriteHeader(200)
+// 	json.NewEncoder(w).Encode("TODO")
+// }
 
 func RouteToClientPage(w http.ResponseWriter, r *http.Request) {
 
